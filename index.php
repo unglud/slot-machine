@@ -11,9 +11,11 @@ use Unglued\SlotMachine;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$slot = new SlotMachine([1000,500,300,200,150,100,60,50,40,1]);
+$slot = new SlotMachine([100,50,25,10,3]);
+
+
+
+dd($slot->testPayout());
+$slot->testSpin(10000);
 
 dd($slot->spin());
-
-//dd($slot->testPayout());
-//dd($slot->testSpin(10000));

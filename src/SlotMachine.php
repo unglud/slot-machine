@@ -58,7 +58,7 @@ class SlotMachine
                 $result[] = $this->reelsMap[$this->getRand()];
             }
             if (count(array_unique($result)) == 1) {
-                $this->win += $this->payout[array_unique($result)[0]];
+                $win += $this->payout[array_unique($result)[0]];
             }
         }
         dd([
