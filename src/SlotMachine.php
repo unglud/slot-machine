@@ -20,12 +20,9 @@ class SlotMachine
     protected $payout;
     protected $reelsMap;
 
-    private $win = 0;
-    private $lose = 0;
-
     public function __construct($payout, $probabilities = [])
     {
-        $this->probabilities = empty($probabilities)?$this->getProportions(count($payout)):$probabilities;
+        $this->probabilities = empty($probabilities) ? $this->getProportions(count($payout)) : $probabilities;
 
         $payMap = [];
         $alphabet = 'a';
@@ -43,8 +40,18 @@ class SlotMachine
         $this->probabilities = $probabilities;
     }
 
-    public function spin($times)
+    public function spin()
     {
+        $result = [];
+        for ($j = 0; $j < $this->reels; ++$j) {
+            $result[] = $this->reelsMap[$this->getRand()];
+        }
+        return $result;
+    }
+
+    public function testSpin($times)
+    {
+        $win = 0;
         for ($i = 0; $i < $times; ++$i) {
             $result = [];
             for ($j = 0; $j < $this->reels; ++$j) {
@@ -52,13 +59,11 @@ class SlotMachine
             }
             if (count(array_unique($result)) == 1) {
                 $this->win += $this->payout[array_unique($result)[0]];
-            } else {
-                ++$this->lose;
             }
         }
         dd([
-            'win' => $this->win,
-            'win %' => $this->win * 100 / $times
+            'win' => $win,
+            'win %' => $win * 100 / $times
         ]);
     }
 
