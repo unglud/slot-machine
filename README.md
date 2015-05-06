@@ -59,6 +59,10 @@ $probs = [
 $slot = new SlotMachine([10,5,1], $probs);
 ```
 
+## More to come
+Later I'll write more about theory.
+
+
 ## License
 
 Laravel Image is released under the MIT Licence. See the bundled LICENSE file for details.
