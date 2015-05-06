@@ -16,8 +16,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $slot = new SlotMachine([1000,500,300,200,150,100,60,50,40,1]);
 
-$slot->spin(10000);
+//$slot->spin(10000);
 
-//dd($slot->testPayout());
+dd($slot->testPayout());
 //dd($slot->getProportions(10));
 //dd($slot->generateReelsMap());

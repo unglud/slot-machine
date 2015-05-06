@@ -23,9 +23,9 @@ class SlotMachine
     private $win = 0;
     private $lose = 0;
 
-    public function __construct($payout)
+    public function __construct($payout, $probabilities = [])
     {
-        $this->probabilities = $this->getProportions(count($payout));
+        $this->probabilities = empty($probabilities)?$this->getProportions(count($payout)):$probabilities;
 
         $payMap = [];
         $alphabet = 'a';
@@ -36,6 +36,11 @@ class SlotMachine
 
         $this->payout = $payMap;
         $this->reelsMap = $this->generateReelsMap();
+    }
+
+    public function setProportions($probabilities)
+    {
+        $this->probabilities = $probabilities;
     }
 
     public function spin($times)
