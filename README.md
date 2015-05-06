@@ -26,12 +26,23 @@ For start you need create Payout and test it
 
 ```php
 $slot = new SlotMachine([1000,500,300,200,150,100,60,50,40,1]);
-dd($slot->testPayout());
+$slot->spin();
+
+/*
+array:3 [
+  0 => "j"
+  1 => "i"
+  2 => "d"
+]
+*/
+
 ```
 
+You can test you Payout and see probabilities
 In result you will see something like this
 
 ```
+dd($slot->testPayout());
 array:11 [
   "a|1" => 0.0476837158203
   "b|3" => 0.643730163574
