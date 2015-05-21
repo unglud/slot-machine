@@ -85,11 +85,25 @@ class SlotMachine
     public function spin()
     {
         $result = [];
-        for ($j = 0; $j < $this->reels; ++$j) {
+        for ($j = 0; $j < 3; ++$j) {
             $result[] = $this->reelsMap[$this->getRand()];
         }
 
-        return $result;
+        $tmp = [];
+        foreach ($result as $res) {
+            @$tmp[$res] += 1;
+        }
+        $orig = $tmp;
+        asort($tmp);
+
+        if (end($tmp) >= 2) {
+            $tmp = array_keys($tmp);
+
+            return array_fill(0, 3, end($tmp));
+        }
+
+        return array_slice(array_keys($orig), 0, $this->reels);
+
     }
 
     protected function getRand()
@@ -104,12 +118,20 @@ class SlotMachine
         $win = 0;
         for ($i = 0; $i < $times; ++$i) {
             $result = [];
-            for ($j = 0; $j < $this->reels; ++$j) {
+            for ($j = 0; $j < 3; ++$j) {
                 $result[] = $this->reelsMap[$this->getRand()];
             }
-            if (count(array_unique($result)) == 1) {
-                $win += $this->payout[array_unique($result)[0]];
-                @$kombs[array_unique($result)[0]] += 1;
+
+            $tmp = [];
+            foreach ($result as $res) {
+                @$tmp[$res] += 1;
+            }
+            asort($tmp);
+
+            if (end($tmp) >= 2) {
+                $win += 1;
+                $tmp = array_keys($tmp);
+                @$kombs[end($tmp)] += 1;
             }
         }
 

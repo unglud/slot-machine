@@ -13,22 +13,22 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $prob = [
     'a' => 1,
-    'b' => 5,
-    'c' => 5,
-    'd' => 5,
-    'e' => 5,
-    'f' => 11,
-    'g' => 11,
-    'h' => 11,
-    'i' => 14,
+    'b' => 2,
+    'c' => 2,
+    'd' => 2,
+    'e' => 2,
+    'f' => 8,
+    'g' => 8,
+    'h' => 8,
+    'i' => 10,
     'j' => 20,
-    'k' => 41
+    'k' => 65
 ];
 
 
 dd(array_sum($prob));
 
-$slot = new SlotMachine([10000, 2000, 2000, 2000, 2000, 400, 400, 400, 300, 5, 1], $prob);
+$slot = new SlotMachine([10000, 100, 100, 100, 100, 50, 50, 50, 10, 5, 1], $prob);
 
 
 dd($slot->testPayout());
