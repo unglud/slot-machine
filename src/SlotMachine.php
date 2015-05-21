@@ -22,7 +22,7 @@ class SlotMachine
 
     public function __construct($payout, $probabilities = [])
     {
-        $this->probabilities = empty($probabilities) ? $this->getProportions(count($payout)) : $probabilities;
+        $this->probabilities = (empty($probabilities) ? $this->getProportions(count($payout)) : $probabilities);
 
         $payMap = [];
         $alphabet = 'a';
@@ -33,43 +33,6 @@ class SlotMachine
 
         $this->payout = $payMap;
         $this->reelsMap = $this->generateReelsMap();
-    }
-
-    public function setProportions($probabilities)
-    {
-        $this->probabilities = $probabilities;
-    }
-
-    public function spin()
-    {
-        $result = [];
-        for ($j = 0; $j < $this->reels; ++$j) {
-            $result[] = $this->reelsMap[$this->getRand()];
-        }
-        return $result;
-    }
-
-    public function testSpin($times)
-    {
-        $win = 0;
-        for ($i = 0; $i < $times; ++$i) {
-            $result = [];
-            for ($j = 0; $j < $this->reels; ++$j) {
-                $result[] = $this->reelsMap[$this->getRand()];
-            }
-            if (count(array_unique($result)) == 1) {
-                $win += $this->payout[array_unique($result)[0]];
-            }
-        }
-        dd([
-            'win' => $win,
-            'win %' => $win * 100 / $times
-        ]);
-    }
-
-    protected function getRand()
-    {
-        return mt_rand() % $this->virtual + 1;
     }
 
     protected function getProportions($symbols = 5)
@@ -95,6 +58,69 @@ class SlotMachine
         return $probabilities;
     }
 
+    protected function generateReelsMap()
+    {
+        $reelMap = [];
+        foreach ($this->probabilities as $key => $prob) {
+
+            $reelMap += array_fill(count($reelMap), $prob, $key);
+
+        }
+
+        shuffle($reelMap);
+
+        $first = $reelMap[0];
+        unset($reelMap[0]);
+        $reelMap[] = $first;
+
+        return $reelMap;
+
+    }
+
+    public function setProportions($probabilities)
+    {
+        $this->probabilities = $probabilities;
+    }
+
+    public function spin()
+    {
+        $result = [];
+        for ($j = 0; $j < $this->reels; ++$j) {
+            $result[] = $this->reelsMap[$this->getRand()];
+        }
+
+        return $result;
+    }
+
+    protected function getRand()
+    {
+        return mt_rand() % $this->virtual + 1;
+    }
+
+    public function testSpin($times)
+    {
+
+        $kombs = [];
+        $win = 0;
+        for ($i = 0; $i < $times; ++$i) {
+            $result = [];
+            for ($j = 0; $j < $this->reels; ++$j) {
+                $result[] = $this->reelsMap[$this->getRand()];
+            }
+            if (count(array_unique($result)) == 1) {
+                $win += $this->payout[array_unique($result)[0]];
+                @$kombs[array_unique($result)[0]] += 1;
+            }
+        }
+
+        ksort($kombs);
+        dd([
+            'win' => $win,
+            'win %' => $win * 100 / $times,
+            'kombs' => $kombs
+        ]);
+    }
+
     public function testPayout()
     {
         $result = [];
@@ -106,31 +132,6 @@ class SlotMachine
         $result['total'] = round(array_sum($result), 2) . '%';
 
         return $result;
-    }
-
-    protected function generateReelsMap()
-    {
-        $reelMap = [];
-
-        $last = 1;
-        foreach ($this->probabilities as $key => $prob) {
-
-            $k = current($this->probabilities);
-            if (!$k) {
-                $k = $this->virtual + 1;
-            }
-            $reelMap += array_fill($last, $k - $prob, $key);
-            $last = count($reelMap) + 1;
-
-            next($this->probabilities);
-        }
-        shuffle($reelMap);
-
-        $first = $reelMap[0];
-        unset($reelMap[0]);
-        $reelMap[] = $first;
-
-        return $reelMap;
     }
 
 
